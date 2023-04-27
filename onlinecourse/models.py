@@ -21,7 +21,7 @@ class Instructor(models.Model):
 
     def __str__(self):
         return self.user.name
-
+  
 
 # Learner model
 class Learner(models.Model):
