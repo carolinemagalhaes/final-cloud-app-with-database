@@ -8,7 +8,7 @@ from .models import Course, Lesson, Instructor, Learner, Question, Choice
 class LessonInline(admin.StackedInline):
     model = Lesson
     extra = 5
-
+ 
 class QuestionInline(admin.StackedInline):
     model = Question
     extra = 3
