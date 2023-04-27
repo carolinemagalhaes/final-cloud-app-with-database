@@ -39,16 +39,51 @@
     {% if grade > 80 %}
     <div class="alert alert-success">
        <!--HINT Display passed info -->
+       <h1><b>Sucess</b> Congratulations, {{user.username}}! Score: {{grade}}/100  </h1>
     </div>
         {% else %}
         <div class="alert alert-danger">
             <!--HINT Display failed info -->
+            <h1><b>Failed</b> Sorry {{user.username}}, Score: {{grade}}/100</h1>
         </div>
         <a class="btn btn-link text-danger" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
         {% endif %}
         <div class="card-columns-vertical mt-1">
         <h5 class="">Exam results</h5>
             <!--HINT Display exam results-->
+            {% for lesson in course.lesson_set.all %}
+                    <div class="card mt-1">
+                        <div class="card-header"><h5>Lesson {{lesson.order|add:1}}: {{lesson.title}}</h5></div>
+                        <div class="card-body">{{lesson.content}}</div>
+                    </div>
+                    <div class="card mt-1">
+                        {% if user.is_authenticated %}
+                            {% for question in lesson.question_set.all %}
+                            <div class="card mt-1" id="{{lesson.id}}">
+                                <div class="card-header "><h5>{{ question.question_text}}</h5></div>
+                                    {% csrf_token %}
+                                    <div class="card-body">
+                                        {% for choice in question.choice_set.all %}  
+                                            <div class="form-check">
+                                                {% if choice.id in selected_ids and choice.correct %}
+                                                    <p style="color:#33FF80;">{{choice.choice_text}}</p>
+                                                {% elif  choice.correct%}
+                                                    <p style="color:#F9FF33;">{{ choice.choice_text }}</p>
+                                                {% else %}
+                                                    <P> <b>{{ choice.choice_text }}</b></p>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <h1>You have to signed in to Access this exam</h2>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </body>
